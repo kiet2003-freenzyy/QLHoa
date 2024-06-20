@@ -17,8 +17,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Check out current directory
+      run: pwd
+
+    - name: List files in current directory
+      run: ls -la
+
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
+
+    - name: Check PHP version
+      run: php -v
+
+    - name: Check Composer version
+      run: composer -V
 
     - name: Cache Composer packages
       id: composer-cache
@@ -30,10 +42,10 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist -v
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
 
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: Run test suite
+      run: composer run-script test
